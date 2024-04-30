@@ -86,7 +86,7 @@
         <div id="temperature">Fetching temperature...</div>
         <div id="time">Fetching time...</div>
         <div id="date">Fetching date...</div>
-        <div id="designed-by">Designed by Samartha Gs</div>
+        <div id="designed-by">Designed by Supiya Bhat</div>
         <div class="rain"></div>
     </div>
 
@@ -142,17 +142,17 @@
             var today = new Date();
             var time = today.toLocaleTimeString('en', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
             document.getElementById('time').textContent = "" + time;
-            document.getElementById('designed-by').textContent = "Designed by Samartha Gs"; // Update designed by text
+            document.getElementById('designed-by').textContent = "Designed by Supriya Bhat"; 
         }
 
         function errorHandler(err) {
             console.warn('Error(' + err.code + '): ' + err.message);
-            document.getElementById('main-location').textContent = "Server Error by Samartha";
-            document.getElementById('sub-location').textContent = "Server Error by Samartha.";
-            document.getElementById('temperature').textContent = "Server Error by Samartha.";
-            document.getElementById('weather').textContent = "Server Error by Samartha.";
-            document.getElementById('date').textContent = "Server Error by Samartha.";
-            document.getElementById('time').textContent = "Server Error by Samartha.";
+            document.getElementById('main-location').textContent = "Server Error by Supriya";
+            document.getElementById('sub-location').textContent = "Server Error by  Supriya.";
+            document.getElementById('temperature').textContent = "Server Error by  Supriya.";
+            document.getElementById('weather').textContent = "Server Error by  Supriya.";
+            document.getElementById('date').textContent = "Server Error by  Supriya.";
+            document.getElementById('time').textContent = "Server Error by  Supriya.";
         }
 
         if (navigator.geolocation) {
@@ -160,9 +160,9 @@
             navigator.geolocation.getCurrentPosition(getWeather, errorHandler);
             getCurrentDate();
             getCurrentTime();
-            setInterval(getCurrentTime, 1000); // Update time every second
+            setInterval(getCurrentTime, 1000);
         } else {
-            document.getElementById('main-location').textContent = "Server Error by Samartha.";
+            document.getElementById('main-location').textContent = "Server Error by  Supriya.";
             document.getElementById('sub-location').textContent = "Weather information is not available.";
             document.getElementById('temperature').textContent = "Weather information is not available.";
             document.getElementById('weather').textContent = "Date information is not available.";
