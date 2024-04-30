@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samartha Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #7F7FD5, #86A8E7, #91EAE4);
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            width: 300px;
+            max-width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        #main-location {
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #sub-location {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        #temperature {
+            margin-bottom: 10px;
+            font-size: 48px;
+            color: #333;
+        }
+
+        #weather {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        #date,
+        #time {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        #designed-by {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="cloud"></div>
+    <div class="sun"></div>
+    <div class="container">
+        <h1>LocaSync</h1>
+        <div id="main-location">Fetching location...</div>
+        <div id="sub-location">Fetching weather...</div>
+        <div id="temperature">Fetching temperature...</div>
+        <div id="time">Fetching time...</div>
+        <div id="date">Fetching date...</div>
+        <div id="designed-by">Designed by Samartha Gs</div>
+        <div class="rain"></div>
+    </div>
+
+    <script>
+        function showLocation(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            
+            // Use reverse geocoding to get location information
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`)
+                .then(response => response.json())
+                .then(data => {
+                    var address = data.display_name || "Unknown";
+                    var locationParts = address.split(', ');
+                    var mainLocation = locationParts[0];
+                    var subLocation = locationParts.slice(1).join(', ');
+                    document.getElementById('main-location').textContent = mainLocation;
+                    document.getElementById('sub-location').textContent = subLocation;
+                })
+                .catch(error => {
+                    console.error('Error fetching location:', error);
+                    document.getElementById('main-location').textContent = "Error retrieving location.";
+                    document.getElementById('sub-location').textContent = "Error retrieving location.";
+                });
+        }
+
+        function getWeather(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            // Fetch weather information from OpenWeatherMap API
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=f3f07beaf84efee40a2482050e89ea8f&units=metric`)
+                .then(response => response.json())
+                .then(data => {
+                    var temperature = data.main.temp;
+                    var weather = data.weather[0].description;
+                    document.getElementById('temperature').textContent = temperature.toFixed(0) + "°C";
+                })
+                .catch(error => {
+                    console.error('Error fetching weather:', error);
+                    document.getElementById('temperature').textContent = "Error retrieving temperature.";
+                    document.getElementById('weather').textContent = "Error retrieving weather information.";
+                });
+        }
+
+        function getCurrentDate() {
+            var today = new Date();
+            var date = today.toLocaleDateString('en', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('date').textContent = "" + date;
+        }
+
+        function getCurrentTime() {
+            var today = new Date();
+            var time = today.toLocaleTimeString('en', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
+            document.getElementById('time').textContent = "" + time;
+            document.getElementById('designed-by').textContent = "Designed by Samartha Gs"; // Update designed by text
+        }
+
+        function errorHandler(err) {
+            console.warn('Error(' + err.code + '): ' + err.message);
+            document.getElementById('main-location').textContent = "Server Error by Samartha";
+            document.getElementById('sub-location').textContent = "Server Error by Samartha.";
+            document.getElementById('temperature').textContent = "Server Error by Samartha.";
+            document.getElementById('weather').textContent = "Server Error by Samartha.";
+            document.getElementById('date').textContent = "Server Error by Samartha.";
+            document.getElementById('time').textContent = "Server Error by Samartha.";
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showLocation, errorHandler);
+            navigator.geolocation.getCurrentPosition(getWeather, errorHandler);
+            getCurrentDate();
+            getCurrentTime();
+            setInterval(getCurrentTime, 1000); // Update time every second
+        } else {
+            document.getElementById('main-location').textContent = "Server Error by Samartha.";
+            document.getElementById('sub-location').textContent = "Weather information is not available.";
+            document.getElementById('temperature').textContent = "Weather information is not available.";
+            document.getElementById('weather').textContent = "Date information is not available.";
+            document.getElementById('date').textContent = "Date information is not available.";
+            document.getElementById('time').textContent = "Time information is not available.";
+        }
+    </script>
+</body>
+</html>
